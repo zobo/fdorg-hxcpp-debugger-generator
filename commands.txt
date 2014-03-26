@@ -1,0 +1,98 @@
+    Exit;
+    // Response: Exited
+
+    Detach;
+    // Response: Detached
+
+    Files;
+    // Response: StringList
+
+    Classes;
+    // Response: StringList
+
+    Mem;
+    // Response: MemBytes
+
+    Compact;
+    // Response: Compacted
+
+    Collect;
+    // Response: Collected
+
+    SetCurrentThread(number : Int);
+    // Response: CurrentThread, ErrorNoSuchThread
+
+    AddFileLineBreakpoint(fileName : String, lineNumber : Int);
+    // Response: FileLineBreakpointNumber, ErrorNoSuchFile
+
+    AddClassFunctionBreakpoint(className : String, functionName : String);
+    // Response: ClassFunctionBreakpointNumber, ErrorBadClassNameRegex,
+    // ErrorBadFunctionNameRegex, ErrorNoMatchingFunctions
+
+    ListBreakpoints(enabled : Bool, disabled : Bool);
+    // Response: Breakpoints
+
+    DescribeBreakpoint(number : Int);
+    // Response: BreakpointDescription, ErrorNoSuchBreakpoint
+
+    DisableAllBreakpoints;
+    // Response: BreakpointStatuses
+
+    DisableBreakpointRange(first : Int, last: Int);
+    // Response: BreakpointStatuses
+
+    EnableAllBreakpoints;
+    // Response: BreakpointStatuses
+
+    EnableBreakpointRange(first : Int, last: Int);
+    // Response: BreakpointStatuses
+
+    DeleteAllBreakpoints;
+    // Response: BreakpointStatuses
+
+    DeleteBreakpointRange(first : Int, last: Int);
+    // Response: BreakpointStatuses
+
+    BreakNow;
+    // Response: OK
+
+    Continue(count : Int);
+    // Response: Continued, ErrorBadCount
+
+    Step(count : Int);
+    // Response: Continued, ErrorBadCount
+
+    Next(count : Int);
+    // Response: Continued, ErrorBadCount
+
+    Finish(count : Int);
+    // Response: Continued, ErrorBadCount
+
+    WhereCurrentThread(unsafe : Bool);
+    // Response: ThreadsWhere, ErrorCurrentThreadNotStopped
+
+    WhereAllThreads;
+    // Response: ThreadsWhere
+
+    Up(count : Int);
+    // Response: CurrentFrame, ErrorCurrentThreadNotStopped, ErrorBadCount
+
+    Down(count : Int);
+    // Response: CurrentFrame, ErrorCurrentThreadNotStopped, ErrorBadCount
+
+    SetFrame(number : Int);
+    // Response: CurrentFrame, ErrorCurrentThreadNotStopped, ErrorBadCount
+
+    Variables(unsafe : Bool);
+    // Response: ErrorCurrentThreadNotStopped, Variables
+
+    PrintExpression(unsafe : Bool, expression : String);
+    // Response: Value, ErrorCurrentThreadNotStopped, ErrorEvaluatingExpression
+
+    SetExpression(unsafe: Bool, lhs : String, rhs : String);
+    // Response: Valuet, ErrorCurrentThreadNotStopped,
+    // ErrorEvaluatingExpression
+
+        CommandId(id: Int, command: Command);
+    GetExpression(unsafe: Bool, expression : String);
+        // Response: Variable
