@@ -1,0 +1,153 @@
+/**
+ * A list of strings
+ **/
+enum StringList
+{
+    Terminator;
+    Element(string : String, next : StringList);
+}
+
+
+/**
+ * A list of breakpoints
+ **/
+enum BreakpointList
+{
+    Terminator;
+    Breakpoint(number : Int, description : String, enabled : Bool,
+               multi : Bool, next : BreakpointList);
+}
+
+
+/**
+ * A list of locations at which a breakpoint breaks
+ **/
+enum BreakpointLocationList
+{
+    Terminator;
+    FileLine(fileName : String, lineNumber : Int,
+             next : BreakpointLocationList);
+    ClassFunction(className : String, functionName : String,
+                  next : BreakpointLocationList);
+}
+
+
+/**
+ * A list of breakpoint status that results from disabling, enabling, or
+ * deleting breakpoints
+ **/
+enum BreakpointStatusList
+{
+    Terminator;
+    Nonexistent(number : Int, next : BreakpointStatusList);
+    Disabled(number : Int, next : BreakpointStatusList);
+    AlreadyDisabled(number : Int, next : BreakpointStatusList);
+    Enabled(number : Int, next : BreakpointStatusList);
+    AlreadyEnabled(number : Int, next : BreakpointStatusList);
+    Deleted(number : Int, next : BreakpointStatusList);
+}
+
+
+/**
+ * Status of a thread
+ **/
+enum ThreadStatus
+{
+    Running;
+    StoppedImmediate;
+    StoppedBreakpoint(number : Int);
+    StoppedUncaughtException;
+    StoppedCriticalError(description : String);
+}
+
+
+/**
+ * A list of call stack frames of a thread
+ **/
+enum FrameList
+{
+    Terminator;
+    Frame(isCurrent : Bool, number : Int, className : String,
+          functionName : String, fileName : String, lineNumber : Int,
+          next : FrameList);
+}
+
+
+/**
+ * Information about why and where a thread has stopped
+ **/
+enum ThreadWhereList
+{
+    Terminator;
+    Where(number : Int, status : ThreadStatus, frameList : FrameList,
+          next : ThreadWhereList);
+}
+
+enum VariableValue
+{
+        Item(type : String, value : String, children : VariableNameList);
+        NoItem;
+}
+
+enum VariableName
+{
+        Variable(name : String, fullName : String, isStatic : Bool, value : VariableValue);
+}
+
+enum VariableNameList
+{
+        Terminator;
+        Element(variable : VariableName, next: VariableNameList);
+}
+
+/**
+ * Messages are delivered by the debugger thread in response to Commands and
+ * also spuriously for thread events.
+ **/
+enum Message
+{
+    // Errors
+    ErrorInternal(details : String);
+    ErrorNoSuchThread(number : Int);
+    ErrorNoSuchFile(fileName : String);
+    ErrorNoSuchBreakpoint(number : Int);
+    ErrorBadClassNameRegex(details : String);
+    ErrorBadFunctionNameRegex(details : String);
+    ErrorNoMatchingFunctions(className : String, functionName : String,
+                             unresolvableClasses : StringList);
+    ErrorBadCount(count : Int);
+    ErrorCurrentThreadNotStopped(threadNumber : Int);
+    ErrorEvaluatingExpression(details : String);
+
+    // Normal messages
+    OK;
+    Exited;
+    Detached;
+    Files(list : StringList);
+    Classes(list : StringList);
+    MemBytes(bytes : Int);
+    Compacted(bytesBefore : Int, bytesAfter : Int);
+    Collected(bytesBefore : Int, bytesAfter : Int);
+    CurrentThread(number : Int);
+    FileLineBreakpointNumber(number : Int);
+    ClassFunctionBreakpointNumber(number : Int,
+                                  unresolvableClasses : StringList);
+    Breakpoints(list : BreakpointList);
+    BreakpointDescription(number : Int, list : BreakpointLocationList);
+    BreakpointStatuses(list : BreakpointStatusList);
+    Continued(count : Int);
+    ThreadsWhere(list : ThreadWhereList);
+    CurrentFrame(number : Int);
+    Variables(list : StringList);
+    Value(expression : String, type : String, value : String);
+
+    // Asynchronously delivered on thread events
+    ThreadCreated(number : Int);
+    ThreadTerminated(number : Int);
+    ThreadStarted(number : Int);
+    ThreadStopped(number : Int, className : String, functionName : String,
+                  fileName : String, lineNumber : Int);
+
+        MessageId(id : Int, message : Message);
+        Variable(name : String, value : VariableValue);
+}
