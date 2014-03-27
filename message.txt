@@ -123,7 +123,7 @@ enum Message
     OK;
     Exited;
     Detached;
-    Files(list : StringList);
+    Files(list : Array<String>);
     Classes(list : StringList);
     MemBytes(bytes : Int);
     Compacted(bytesBefore : Int, bytesAfter : Int);
