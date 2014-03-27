@@ -3,7 +3,7 @@
 define("TAB","    ");
 define("NL","\n");
 
-$types = array("Int"=>"int","Bool"=>"bool","String"=>"string","Command"=>"Command");
+$types = array("Int"=>"int","Bool"=>"bool","String"=>"string","Command"=>"Command","Array<String>"=>"String[]");
 $lines = file("message.txt");
 $tmp_buf = "";
 foreach ($lines as $line) {
@@ -49,7 +49,11 @@ foreach ($lines as $line) {
                         {
 
                                 echo TAB.TAB.TAB.TAB.'ret.'.$arg[0].' = ';
-                                if ($arg[2])
+                                if ($arg[1] == "Array<String>")
+                                {
+                                        echo 'Array.ConvertAll<Object, String>((Object[])haxeEnum.arguments['.$n.'], item => (String)item);'.NL;
+                                }
+                                else if ($arg[2])
                                 {
                                         echo '('.$arg[2].')haxeEnum.arguments['.$n.'];'.NL;
                                 }
@@ -83,7 +87,14 @@ foreach ($lines as $line) {
                         foreach ($ctor['args'] as $n=>$arg)
                         {
                                 if ($n>0) echo ', ';
-                                echo $arg[0].'=" + '.$arg[0].' + "';
+                                if ($arg[1] == "Array<String>")
+                                {
+                                        echo $arg[0].'=string[" + String.Join(", ", '.$arg[0].') + "]';
+                                }
+                                else
+                                {
+                                        echo $arg[0].'=" + '.$arg[0].' + "';
+                                }
                         }
                         echo ')]";'.NL;
                         echo TAB.TAB.TAB.'}'.NL;
